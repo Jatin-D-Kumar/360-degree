@@ -6,15 +6,7 @@ import { MEDIA, NAMESPACE, THEME } from "@/constants";
 
 export default function useTheme() {
   const { setItem, getItem } = useStorage(NAMESPACE);
-  const [theme, setTheme] = useState<string>(() => {
-    const prevTheme = getItem("theme");
-    if (!!prevTheme && prevTheme.length > 0) {
-      return prevTheme;
-    } else {
-      const systemTheme = getSystemTheme();
-      return systemTheme;
-    }
-  });
+  const [theme, setTheme] = useState<string>(THEME.DARK);
 
   // function to toggle theme
   function toggleTheme() {
@@ -26,6 +18,16 @@ export default function useTheme() {
       setItem("theme", THEME.DARK);
     }
   }
+
+  useEffect(() => {
+    const prevTheme = getItem("theme");
+    if (!!prevTheme && prevTheme.length > 0) {
+      setTheme(prevTheme);
+    } else {
+      const systemTheme = getSystemTheme();
+      setTheme(systemTheme);
+    }
+  }, []);
 
   useEffect(() => {
     if (theme === THEME.DARK) {
